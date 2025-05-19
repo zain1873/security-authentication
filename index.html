@@ -4,13 +4,60 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Enterprise Security Authentication</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
   <link
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     rel="stylesheet"
   />
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Add this CSS directly in the HTML if styles.css doesn't contain it */
+    .content-container {
+      display: none;
+    }
+    
+    .content-container.active {
+      display: block;
+    }
+    
+    .sentiment-pill {
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    
+    .ai-score-pill {
+      padding: 5px 10px;
+      font-weight: 500;
+    }
+    
+    .cap-btn.active {
+      background-color: #0d6efd;
+      color: white;
+    }
+
+    .trend-icons i {
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    .trend-icons .active-up {
+      background-color: green;
+      color: white;
+    }
+    
+    .trend-icons .active-down {
+      background-color: red;
+      color: white;
+    }
+  </style>
 </head>
 <body>
+  <!-- Authentication Container -->
   <div class="container" id="authContainer">
     <div class="auth-card">
       <div class="auth-header">
@@ -42,8 +89,8 @@
     </div>
   </div>
 
-  <!-- Data Table Screen -->
-  <div class="data-container" id="dataContainer">
+  <!-- Data Container -->
+  <div class="data-container" id="dataContainer" style="display: none;">
     <div class="data-header">
       <h1 class="data-title">Historic ATS Gainers & Losers</h1>
       <div class="data-actions">
@@ -62,28 +109,38 @@
       </div>
     </div>
 
+    <!-- Main Nav Tabs -->
+    <ul class="nav nav-tabs gap-2 mt-4" id="customNavTabs">
+      <li class="nav-item">
+        <button class="nav-link active" data-tab="darkflowHistory">DarkFlow History</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-tab="mainTable">Main Table</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-tab="tradeAlerts">Trade Alerts</button>
+      </li>
+    </ul>
 
-    <!-- HISTORIC ATS GAINERS & LOSERS TABLE -->
-    <div class="container mt-5" id="atsTableContainer" style="padding: 20px; background-color: #ffffff; color: #000;">
-      <h2>Historic ATS Gainers & Losers</h2>
-
+    <!-- DarkFlow History Tab Content -->
+    <div class="content-container active" id="darkflowHistoryContent">
       <ul class="nav nav-tabs gap-2 mt-4">
         <li class="nav-item">
-          <button class="nav-link active" data-tab="largeCaps">Large Caps</button>
+          <button class="nav-link active" data-df-tab="largeCaps">Large Caps</button>
         </li>
         <li class="nav-item">
-          <button class="nav-link" data-tab="mediumCaps">Medium Caps</button>
+          <button class="nav-link" data-df-tab="mediumCaps">Medium Caps</button>
         </li>
         <li class="nav-item">
-          <button class="nav-link" data-tab="smallCaps">Small Caps</button>
+          <button class="nav-link" data-df-tab="smallCaps">Small Caps</button>
         </li>
 
         <div class="ms-auto d-flex gap-2">
-          <button id="trendUp" class="btn btn-sm" style="background-color: green; color: white;">
-            <i class="fa-solid fa-arrow-trend-up"></i>
+          <button id="dfTrendUp" class="btn btn-sm" style="background-color: green; color: white;">
+            <i class="fas fa-arrow-trend-up"></i>
           </button>
-          <button id="trendDown" class="btn btn-sm" style="background-color: gray; color: white;">
-            <i class="fa-solid fa-arrow-trend-down"></i>
+          <button id="dfTrendDown" class="btn btn-sm" style="background-color: gray; color: white;">
+            <i class="fas fa-arrow-trend-down"></i>
           </button>
         </div>
       </ul>
@@ -107,8 +164,102 @@
         </table>
       </div>
     </div>
+
+    <!-- Main Table Tab Content -->
+    <div class="content-container" id="mainTableContent">
+      <div class="mb-4">
+        <h1 class="h3 mb-3">Stocks Performance Summary</h1>
+
+        <!-- Activity Tabs -->
+        <ul class="nav nav-tabs gap-2 mt-4" id="activityTabs">
+          <li class="nav-item">
+            <button class="nav-link active" data-activity-tab="intraday">Intraday Activity</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-activity-tab="weekly">Weekly Activity</button>
+          </li>
+        </ul>
+
+        <!-- Cap Tabs ------------------- -->
+         <ul class="nav nav-tabs gap-2 mt-4">
+        <div class="mt-3" style="display: flex; gap: 10px;">
+            <li class="nav-item">
+                <button class="btn cap-btn active" data-cap="large">Large Caps</button>
+            </li>
+          <li class="nav-item"><button class="btn cap-btn" data-cap="medium">Medium Caps</button></li>
+          <li class="nav-item"><button class="btn cap-btn" data-cap="small">Small Caps</button></li>
+        </div>
+
+        <div class="ms-auto d-flex align-items-center gap-2 trend-icons">
+          <i class="fas fa-arrow-trend-up active-up" id="mainBtnUp"></i>
+          <i class="fas fa-arrow-trend-down" id="mainBtnDown"></i>
+        </div>
+
+
+         </ul>
+      
+      </div>
+
+      <!-- Table -->
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead class="bg-primary text-white">
+            <tr>
+              <th>TICKER</th>
+              <th>SHARE PRICE</th>
+              <th>PERFORMANCE</th>
+              <th>CHANGE</th>
+              <th>NEWS SENTIMENT</th>
+              <th>AI SCORE</th>
+              <th>DARK POOL ACTIVITY</th>
+              <th>CALL RATIO</th>
+              <th>MARKET CAP</th>
+              <th>SHARE VOLUME</th>
+            </tr>
+          </thead>
+          <tbody id="stockTableBody">
+            <tr><td colspan="10" class="text-center">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Trade Alerts Tab Content -->
+    <div class="content-container" id="tradeAlertsContent">
+      <h2 class="mb-4">ATS Irregular Activity Alerts</h2>
+
+      <!-- Nav Tabs -->
+      <ul class="nav nav-tabs gap-2 mt-4" id="capTabs">
+        <li class="nav-item"><button class="nav-link active" data-alert-tab="Large Caps">Large Caps</button></li>
+        <li class="nav-item"><button class="nav-link" data-alert-tab="Medium Caps">Medium Caps</button></li>
+        <li class="nav-item"><button class="nav-link" data-alert-tab="Small Caps">Small Caps</button></li>
+        <div class="ms-auto d-flex align-items-center gap-2 trend-icons">
+          <i class="fas fa-arrow-trend-up active-up" id="alertTrendUp"></i>
+          <i class="fas fa-arrow-trend-down" id="alertTrendDown"></i>
+        </div>
+      </ul>
+
+      <!-- Table -->
+      <div class="table-responsive mt-3">
+        <table class="table table-bordered" id="alertsTable">
+          <thead class="table-light">
+            <tr>
+              <th>TIME ENTERED</th>
+              <th>TICKER</th>
+              <th>COMPANY NAME</th>
+              <th>IRREGULAR VOLUME</th>
+              <th>PRICE DETECTED</th>
+            </tr>
+          </thead>
+          <tbody id="alertsTableBody">
+            <tr><td colspan="5" class="text-center">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
+  <!-- Toast Notification -->
   <div class="toast" id="toast">
     <div class="toast-icon">
       <i class="fas fa-check"></i>
@@ -122,7 +273,9 @@
     </button>
   </div>
 
+  <!-- JavaScript -->
   <script>
+    // Authentication Logic
     const ENV = {
       SECURITY_KEYS: [
         "ENT-AUTH-85J2K4L7M9N3P6Q8S1",
@@ -132,9 +285,8 @@
         "AUTH-ID-34G6H8J1K3L5N7P9R2",
         "SYS-KEY-78B2D4F6H8J1L3N5P7"
       ],
-      CURRENT_WEEK_KEY_INDEX: Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 1)) / (7 * 24 * 60 * 60 * 1000)) % 2
+      CURRENT_WEEK_KEY_INDEX: Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 1)) / (7 * 24 * 60 * 60 * 1000)) % 6
     };
-
 
     const authContainer = document.getElementById("authContainer");
     const dataContainer = document.getElementById("dataContainer");
@@ -143,10 +295,9 @@
     const verifyButton = document.getElementById("verifyButton");
     const logoutButton = document.getElementById("logoutButton");
     const authSpinner = document.getElementById("authSpinner");
-    const dataTableBody = document.getElementById("dataTableBody");
     const toast = document.getElementById("toast");
     const toastClose = document.getElementById("toastClose");
-
+    
     function verifySecurityKey() {
       const enteredKey = securityKeyInput.value.trim();
       const validKey = ENV.SECURITY_KEYS[ENV.CURRENT_WEEK_KEY_INDEX];
@@ -162,7 +313,6 @@
           authContainer.style.display = "none";
           dataContainer.style.display = "block";
           document.body.style.backgroundColor = "#F8F9FA";
-          populateTableData();
           showToast();
         } else {
           securityKeyInput.classList.add("error");
@@ -176,41 +326,6 @@
       }, 1500);
     }
 
-    function populateTableData() {
-      dataTableBody.innerHTML = "";
-      sampleData.forEach((item) => {
-        const row = document.createElement("tr");
-        let statusBadge;
-        switch (item.status) {
-          case "active":
-            statusBadge = `<span class="status-badge status-active"><i class="fas fa-circle"></i> Active</span>`;
-            break;
-          case "inactive":
-            statusBadge = `<span class="status-badge status-inactive"><i class="fas fa-circle"></i> Inactive</span>`;
-            break;
-          case "pending":
-            statusBadge = `<span class="status-badge status-pending"><i class="fas fa-circle"></i> Pending</span>`;
-            break;
-          default:
-            statusBadge = item.status;
-        }
-        row.innerHTML = `
-          <td>${item.id}</td>
-          <td>${item.name}</td>
-          <td>${item.client}</td>
-          <td>${item.startDate}</td>
-          <td>${item.endDate}</td>
-          <td>${statusBadge}</td>
-          <td>${item.budget}</td>`;
-        dataTableBody.appendChild(row);
-      });
-    }
-
-    function showToast() {
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 5000);
-    }
-
     function handleLogout() {
       dataContainer.style.display = "none";
       authContainer.style.display = "flex";
@@ -221,6 +336,12 @@
       verifyButton.querySelector(".btn-text").textContent = "Verify Access";
     }
 
+    function showToast() {
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 5000);
+    }
+
+    // Authentication event listeners
     verifyButton.addEventListener("click", verifySecurityKey);
     logoutButton.addEventListener("click", handleLogout);
     toastClose.addEventListener("click", () => toast.classList.remove("show"));
@@ -231,9 +352,34 @@
       securityKeyInput.focus();
     });
 
-    // ========== ATS TABLE SCRIPT ==========
+    // Main Nav Tabs Logic
+    const contentContainers = document.querySelectorAll(".content-container");
+    
+    document.querySelectorAll("#customNavTabs .nav-link").forEach(btn => {
+      btn.addEventListener("click", () => {
+        // Remove active class from all nav links
+        document.querySelectorAll("#customNavTabs .nav-link").forEach(b => b.classList.remove("active"));
+        // Add active class to clicked nav link
+        btn.classList.add("active");
+        
+        // Get the tab ID from data attribute
+        const tabId = btn.getAttribute("data-tab");
+        
+        // Hide all content containers
+        contentContainers.forEach(container => {
+          container.classList.remove("active");
+        });
+        
+        // Show only the selected content container
+        document.getElementById(tabId + "Content").classList.add("active");
+      });
+    });
+
+    // API configuration
     const API_BASE_URL = "https://valourwealthdjango-production.up.railway.app/";
-    const apiPaths = {
+
+    // ========== DarkFlow History Table Logic ==========
+    const dfApiPaths = {
       up: {
         largeCaps: "api/large_caps/",
         mediumCaps: "api/medium_caps/",
@@ -245,13 +391,13 @@
         smallCaps: "api/small_caps_down/",
       },
     };
-
-    let activeTab = "largeCaps";
-    let trend = "up";
+    
+    let dfActiveTab = "largeCaps";
+    let dfTrend = "up";
     const atsTableBody = document.getElementById("atsTableBody");
 
-    function loadTableData() {
-      const url = API_BASE_URL + apiPaths[trend][activeTab];
+    function loadDFTableData() {
+      const url = API_BASE_URL + dfApiPaths[dfTrend][dfActiveTab];
       atsTableBody.innerHTML = `<tr><td colspan="5" class="text-center">Loading data...</td></tr>`;
 
       fetch(url)
@@ -273,7 +419,7 @@
                 <td>${item.ticker || "-"}</td>
                 <td>${from}</td>
                 <td>${to}</td>
-                <td><span class="badge bg-${trend === "up" ? "success" : "danger"}">${item.irregular_vol || "x"}</span></td>
+                <td><span class="badge bg-${dfTrend === "up" ? "success" : "danger"}">${item.irregular_vol || "x"}</span></td>
                 <td><span class="${color}">${parseFloat(item.percent_change) >= 0 ? "+" : ""}${change}</span><br><small>${item.duration || "-"}</small></td>
               </tr>
             `;
@@ -285,30 +431,226 @@
         });
     }
 
-    document.querySelectorAll("[data-tab]").forEach((btn) => {
+    // DarkFlow History Tab Event Listeners
+    document.querySelectorAll("[data-df-tab]").forEach((btn) => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll("[data-tab]").forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll("[data-df-tab]").forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
-        activeTab = btn.getAttribute("data-tab");
-        loadTableData();
+        dfActiveTab = btn.getAttribute("data-df-tab");
+        loadDFTableData();
       });
     });
 
-    document.getElementById("trendUp").addEventListener("click", () => {
-      trend = "up";
-      document.getElementById("trendUp").style.backgroundColor = "green";
-      document.getElementById("trendDown").style.backgroundColor = "gray";
-      loadTableData();
+    document.getElementById("dfTrendUp").addEventListener("click", () => {
+      dfTrend = "up";
+      document.getElementById("dfTrendUp").style.backgroundColor = "green";
+      document.getElementById("dfTrendDown").style.backgroundColor = "gray";
+      loadDFTableData();
     });
 
-    document.getElementById("trendDown").addEventListener("click", () => {
-      trend = "down";
-      document.getElementById("trendDown").style.backgroundColor = "red";
-      document.getElementById("trendUp").style.backgroundColor = "gray";
-      loadTableData();
+    document.getElementById("dfTrendDown").addEventListener("click", () => {
+      dfTrend = "down";
+      document.getElementById("dfTrendDown").style.backgroundColor = "red";
+      document.getElementById("dfTrendUp").style.backgroundColor = "gray";
+      loadDFTableData();
     });
 
-    loadTableData();
+    // ========== Main Table Logic ==========
+    const mainApiPaths = {
+      intraday: {
+        up: {
+          large: "api/intraday/large_caps/",
+          medium: "api/intraday/medium_caps/",
+          small: "api/intraday/small_caps/",
+        },
+        down: {
+          large: "api/intraday/large_caps_down/",
+          medium: "api/intraday/medium_caps_down/",
+          small: "api/intraday/small_caps_down/",
+        },
+      },
+      weekly: {
+        up: {
+          large: "api/weekly/large_caps/",
+          medium: "api/weekly/medium_caps/",
+          small: "api/weekly/small_caps/",
+        },
+        down: {
+          large: "api/weekly/large_caps_down/",
+          medium: "api/weekly/medium_caps_down/",
+          small: "api/weekly/small_caps_down/",
+        },
+      },
+    };
+
+    let mainActiveTab = "intraday";
+    let activeCapSize = "large";
+    let mainTrend = "up";
+
+    const stockTableBody = document.getElementById("stockTableBody");
+
+    function getNewsSentimentClass(value) {
+      value = parseInt(value);
+      if (value > 0) return " ";
+      if (value < 0) return "bg-danger bg-opacity-25 text-danger";
+      return "bg-secondary bg-opacity-25 text-secondary";
+    }
+
+    function getAIScoreClass(score) {
+      const num = parseInt(score);
+      if (num >= 80) return "bg-primary";
+      if (num >= 60) return "bg-info";
+      if (num >= 40) return "bg-warning";
+      return "bg-secondary";
+    }
+
+    function fetchMainTableData() {
+      stockTableBody.innerHTML = `<tr><td colspan="10" class="text-center">Loading data...</td></tr>`;
+      const path = mainApiPaths[mainActiveTab]?.[mainTrend]?.[activeCapSize];
+      if (!path) return;
+
+      fetch(API_BASE_URL + path)
+        .then(res => {
+          if (!res.ok) throw new Error("Failed to fetch");
+          return res.json();
+        })
+        .then(data => {
+          if (!Array.isArray(data) || data.length === 0) {
+            stockTableBody.innerHTML = `<tr><td colspan="10" class="text-center">No data available.</td></tr>`;
+            return;
+          }
+
+          stockTableBody.innerHTML = data.map(stock => `
+            <tr>
+              <td class="fw-bold">${stock.ticker}</td>
+              <td>${stock.live_price}</td>
+              <td class="text-success fw-medium">${stock.performance_percent}</td>
+              <td class="text-success fw-medium">${stock.change}</td>
+              <td><span class="sentiment-pill ${getNewsSentimentClass(stock.sentiment)}">${parseInt(stock.sentiment) > 0 ? '+' + stock.sentiment : stock.sentiment}</span></td>
+              <td><span class="ai-score-pill badge ${getAIScoreClass(stock.ai_score)}">${stock.ai_score}</span></td>
+              <td class="text-success fw-medium">${stock.dark_pool}</td>
+              <td>${stock.call_ratio}</td>
+              <td>${stock.market_cap}</td>
+              <td>${stock.share_volume}</td>
+            </tr>
+          `).join("");
+        })
+        .catch(err => {
+          console.error(err);
+          stockTableBody.innerHTML = `<tr><td colspan="10" class="text-danger text-center">Error loading data.</td></tr>`;
+        });
+    }
+
+    // Main Table Event Listeners
+    document.querySelectorAll("[data-activity-tab]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("[data-activity-tab]").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        mainActiveTab = btn.dataset.activityTab;
+        fetchMainTableData();
+      });
+    });
+
+    document.querySelectorAll(".cap-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".cap-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeCapSize = btn.dataset.cap;
+        fetchMainTableData();
+      });
+    });
+
+    document.getElementById("mainBtnUp").addEventListener("click", () => {
+      mainTrend = "up";
+      document.getElementById("mainBtnUp").classList.replace("btn-outline-secondary", "btn-success");
+      document.getElementById("mainBtnDown").classList.replace("btn-danger", "btn-outline-secondary");
+      fetchMainTableData();
+    });
+
+    document.getElementById("mainBtnDown").addEventListener("click", () => {
+      mainTrend = "down";
+      document.getElementById("mainBtnDown").classList.replace("btn-outline-secondary", "btn-danger");
+      document.getElementById("mainBtnUp").classList.replace("btn-success", "btn-outline-secondary");
+      fetchMainTableData();
+    });
+
+    // ========== Trade Alerts Logic ==========
+    const alertsApiPaths = {
+      up: {
+        "Large Caps": "api/alerts/large_caps/",
+        "Medium Caps": "api/alerts/medium_caps/",
+        "Small Caps": "api/alerts/small_caps/"
+      },
+      down: {
+        "Large Caps": "api/alerts/large_caps_down/",
+        "Medium Caps": "api/alerts/medium_caps_down/",
+        "Small Caps": "api/alerts/small_caps_down/"
+      }
+    };
+
+    let alertActiveTab = "Large Caps";
+    let alertTrend = "up";
+
+    const alertsTableBody = document.getElementById("alertsTableBody");
+
+    function fetchAlertData() {
+      alertsTableBody.innerHTML = `<tr><td colspan="5" class="text-center">Loading...</td></tr>`;
+      const url = API_BASE_URL + alertsApiPaths[alertTrend][alertActiveTab];
+      fetch(url)
+        .then(response => {
+          if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+          return response.json();
+        })
+        .then(data => {
+          if (!Array.isArray(data) || data.length === 0) {
+            alertsTableBody.innerHTML = `<tr><td colspan="5" class="text-center">No data available.</td></tr>`;
+            return;
+          }
+
+          alertsTableBody.innerHTML = data.map(item => `
+            <tr>
+              <td>${item.time_entered || "-"}</td>
+              <td>${item.ticker || "-"}</td>
+              <td>${item.company_name || "-"}</td>
+              <td>${item.irregular_volume || "-"}</td>
+              <td>${item.price_detected || "-"}</td>
+            </tr>
+          `).join("");
+        })
+        .catch(err => {
+          console.error(err);
+          alertsTableBody.innerHTML = `<tr><td colspan="5" class="text-danger text-center">Failed to load data.</td></tr>`;
+        });
+    }
+
+    // Trade Alerts Event Listeners
+    document.querySelectorAll("[data-alert-tab]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("[data-alert-tab]").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        alertActiveTab = btn.dataset.alertTab;
+        fetchAlertData();
+      });
+    });
+
+    document.getElementById("alertTrendUp").addEventListener("click", () => {
+      alertTrend = "up";
+      document.getElementById("alertTrendUp").classList.add("active-up");
+      document.getElementById("alertTrendDown").classList.remove("active-down");
+      fetchAlertData();
+    });
+
+    document.getElementById("alertTrendDown").addEventListener("click", () => {
+      alertTrend = "down";
+      document.getElementById("alertTrendDown").classList.add("active-down");
+      document.getElementById("alertTrendUp").classList.remove("active-up");
+      fetchAlertData();
+    });
+
+    // Initial Data Loading
+    loadDFTableData();
+    fetchMainTableData();
+    fetchAlertData();
   </script>
 </body>
 </html>

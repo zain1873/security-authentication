@@ -165,7 +165,7 @@
         .data-container {
             display: none;
             width: 100%;
-            max-width: 1200px;
+            /* max-width: 1400px; */
             padding: var(--padding);
             margin: 0 auto;
         }
@@ -434,7 +434,16 @@
   color: #fff;
   font-weight: 500;
 }
-
+.bg-success {
+    color: #ffff !important;
+}
+ .table tr th  {
+    background-color: #0A2647 !important;
+    color: #fff !important;
+}
+.cap-btn .active {
+    background-color: #0a2647;
+}
 /* Trend toggle buttons container */
 .ms-auto.d-flex.gap-2,
 .ats-trend-toggle {
