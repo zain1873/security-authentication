@@ -400,3 +400,10 @@
                 justify-content: center;
             }
         }
+
+    @media (max-width: 370px) {
+          .data-actions  {
+            flex-direction: column;
+          }
+
+    }
