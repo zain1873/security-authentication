@@ -370,6 +370,157 @@
         .auth-button .btn-text {
             margin-right: 8px;
         }
+
+
+
+        /* table css */
+
+        /* ====================================
+   Enhanced ATS Gainers & Losers Styles
+======================================= */
+
+/* Container for the ATS table */
+#atsTableContainer,
+.ats-table-container {
+  margin-top: 40px;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: #333;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  min-width: 100%;
+}
+
+/* Header Title */
+#atsTableContainer h2,
+.ats-table-container h2 {
+  font-size: 1.8rem;
+  color: #222;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* Tab navigation styles */
+.nav.nav-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: none;
+  padding-left: 0;
+}
+
+.nav.nav-tabs .nav-item button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #f0f0f0;
+  color: #333;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  list-style: none;
+}
+
+.nav.nav-tabs .nav-item button:hover:not(.active) {
+  background-color: #e0e0e0;
+}
+.nav-item  {
+    list-style: none !important;
+}
+
+.nav.nav-tabs .nav-item button.active {
+  background-color: #0a2647;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* Trend toggle buttons container */
+.ms-auto.d-flex.gap-2,
+.ats-trend-toggle {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+
+/* Trend toggle button styles */
+#trendUp,
+#trendDown {
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  color: #fff;
+}
+
+#trendUp {
+  background-color: #28a745; /* Green */
+}
+
+#trendDown {
+  background-color: #dc3545; /* Red */
+}
+
+#trendUp:hover,
+#trendDown:hover {
+  opacity: 0.9;
+}
+
+/* Table responsive wrapper */
+.table-responsive {
+  overflow-x: auto;
+}
+
+/* ATS Table styles */
+.ats-table,
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.ats-table thead,
+.table thead {
+  background-color: #0a2647;
+  color: #fff;
+}
+
+.ats-table th,
+.ats-table td,
+.table th,
+.table td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #dee2e6;
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+.ats-table tbody tr:hover,
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Badge style for irregular volume */
+.ats-badge,
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: #fff;
+  border-radius: 20px;
+  font-weight: bold;
+  color: #000;
+}
+
+/* Optional: Customize small text in table cells */
+.ats-table small,
+.table small {
+  color: #666;
+}
+
         
         /* Responsive */
         @media (max-width: 768px) {

@@ -1,335 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Security Authentication</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
-    
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enterprise Security Authentication</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    rel="stylesheet"
+  />
 </head>
 <body>
-    <div class="container" id="authContainer">
-        <div class="auth-card">
-            <div class="auth-header">
-                <div class="auth-logo">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h1 class="auth-title">Enterprise Authentication</h1>
-                <p class="auth-subtitle">Enter your security key to access the system</p>
-            </div>
-            <div class="auth-form">
-                <div class="form-group">
-                    <label for="securityKey" class="form-label">Security Key</label>
-                    <input type="password" id="securityKey" class="form-input" placeholder="Enter your security key">
-                    <div class="form-feedback" id="keyFeedback">Invalid security key. Please try again.</div>
-                </div>
-                <button id="verifyButton" class="auth-button">
-                    <span class="btn-text">Verify Access</span>
-                    <div class="spinner" id="authSpinner"></div>
-                </button>
-            </div>
-            <div class="auth-footer">
-                <p>Secure Enterprise Authentication System &copy; 2025</p>
-            </div>
+  <div class="container" id="authContainer">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo">
+          <i class="fas fa-shield-alt"></i>
         </div>
-    </div>
-    
-    <!-- Data Table Screen -->
-    <div class="data-container" id="dataContainer">
-        <div class="data-header">
-            <h1 class="data-title">Enterprise Data Management</h1>
-            <div class="data-actions">
-                <button class="data-action">
-                    <i class="fas fa-download"></i>
-                    Export
-                </button>
-                <button class="data-action">
-                    <i class="fas fa-sync-alt"></i>
-                    Refresh
-                </button>
-                <button class="data-action data-logout" id="logoutButton">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
-                </button>
-            </div>
+        <h1 class="auth-title">Enterprise Authentication</h1>
+        <p class="auth-subtitle">Enter your security key to access the system</p>
+      </div>
+      <div class="auth-form">
+        <div class="form-group">
+          <label for="securityKey" class="form-label">Security Key</label>
+          <input
+            type="password"
+            id="securityKey"
+            class="form-input"
+            placeholder="Enter your security key"
+          />
+          <div class="form-feedback" id="keyFeedback">Invalid security key. Please try again.</div>
         </div>
-        <div class="data-table-container">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Project Name</th>
-                        <th>Client</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Status</th>
-                        <th>Budget</th>
-                    </tr>
-                </thead>
-                <tbody id="dataTableBody">
-                </tbody>
-            </table>
-        </div>
-    </div>
-    
-    <div class="toast" id="toast">
-        <div class="toast-icon">
-            <i class="fas fa-check"></i>
-        </div>
-        <div class="toast-content">
-            <div class="toast-title">Success</div>
-            <div class="toast-message">Authentication successful. Welcome to the system.</div>
-        </div>
-        <button class="toast-close" id="toastClose">
-            <i class="fas fa-times"></i>
+        <button id="verifyButton" class="auth-button">
+          <span class="btn-text">Verify Access</span>
+          <div class="spinner" id="authSpinner"></div>
         </button>
+      </div>
+      <div class="auth-footer">
+        <p>Secure Enterprise Authentication System &copy; 2025</p>
+      </div>
     </div>
-    
-    <script>
-   
-        const ENV = {
-            SECURITY_KEYS: [
-                "ENT-AUTH-85J2K4L7M9N3P6Q8S1",
-                "SEC-KEY-23D7F9G4H6J8K2L5N7P",
-                "ACC-TOK-56X1Z3A5C7E9G2J4L6",
-                "API-KEY-12Q4S6U8W1Y3A5C7E9",
-                "AUTH-ID-34G6H8J1K3L5N7P9R2",
-                "SYS-KEY-78B2D4F6H8J1L3N5P7"
-            ],
-           CURRENT_WEEK_KEY_INDEX: Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 1)) / (7 * 24 * 60 * 60 * 1000)) % 2
-        };
-        
-        // Sample data for the table
-        const sampleData = [
-            {
-                id: "PRJ-2025-001",
-                name: "Enterprise Security Implementation",
-                client: "Acme Corporation",
-                startDate: "12/01/2025",
-                endDate: "06/30/2025",
-                status: "active",
-                budget: "$245,000"
-            },
-            {
-                id: "PRJ-2025-002",
-                name: "Cloud Migration Phase II",
-                client: "GlobalTech Industries",
-                startDate: "02/15/2025",
-                endDate: "09/30/2025",
-                status: "active",
-                budget: "$378,500"
-            },
-            {
-                id: "PRJ-2025-003",
-                name: "Data Analytics Platform",
-                client: "FutureTech Solutions",
-                startDate: "03/10/2025",
-                endDate: "05/15/2025",
-                status: "pending",
-                budget: "$125,000"
-            },
-            {
-                id: "PRJ-2025-004",
-                name: "Mobile Application Redesign",
-                client: "InnovateCorp",
-                startDate: "01/05/2025",
-                endDate: "04/20/2025",
-                status: "inactive",
-                budget: "$95,000"
-            },
-            {
-                id: "PRJ-2025-005",
-                name: "Customer Portal Enhancement",
-                client: "Acme Corporation",
-                startDate: "04/01/2025",
-                endDate: "07/31/2025",
-                status: "active",
-                budget: "$187,200"
-            },
-            {
-                id: "PRJ-2025-006",
-                name: "Network Infrastructure Upgrade",
-                client: "TechSolutions Inc.",
-                startDate: "02/20/2025",
-                endDate: "06/15/2025",
-                status: "active",
-                budget: "$310,000"
-            },
-            {
-                id: "PRJ-2025-007",
-                name: "Cybersecurity Assessment",
-                client: "SecureNet Partners",
-                startDate: "03/05/2025",
-                endDate: "04/30/2025",
-                status: "inactive",
-                budget: "$78,500"
-            },
-            {
-                id: "PRJ-2025-008",
-                name: "AI Implementation Project",
-                client: "FutureTech Solutions",
-                startDate: "04/15/2025",
-                endDate: "09/30/2025",
-                status: "pending",
-                budget: "$420,000"
-            },
-            {
-                id: "PRJ-2025-009",
-                name: "DevOps Training Program",
-                client: "TechSolutions Inc.",
-                startDate: "05/01/2025",
-                endDate: "06/30/2025",
-                status: "pending",
-                budget: "$65,000"
-            },
-            {
-                id: "PRJ-2025-010",
-                name: "Document Management System",
-                client: "GlobalTech Industries",
-                startDate: "01/15/2025",
-                endDate: "05/30/2025",
-                status: "active",
-                budget: "$195,300"
-            }
-        ];
-        
-        // DOM elements
-        const authContainer = document.getElementById("authContainer");
-        const dataContainer = document.getElementById("dataContainer");
-        const securityKeyInput = document.getElementById("securityKey");
-        const keyFeedback = document.getElementById("keyFeedback");
-        const verifyButton = document.getElementById("verifyButton");
-        const logoutButton = document.getElementById("logoutButton");
-        const authSpinner = document.getElementById("authSpinner");
-        const dataTableBody = document.getElementById("dataTableBody");
-        const toast = document.getElementById("toast");
-        const toastClose = document.getElementById("toastClose");
-        
-        // Function to verify security key
-        function verifySecurityKey() {
-            const enteredKey = securityKeyInput.value.trim();
-            const validKey = ENV.SECURITY_KEYS[ENV.CURRENT_WEEK_KEY_INDEX];
-            
-            // Show loading state
-            verifyButton.disabled = true;
-            authSpinner.style.display = "block";
-            verifyButton.querySelector(".btn-text").textContent = "Verifying...";
-            
-            // Simulate a network request
-            setTimeout(() => {
-                if (enteredKey === validKey) {
-                    // Successful authentication
-                    securityKeyInput.classList.remove("error");
-                    keyFeedback.classList.remove("visible");
-                    
-                    // Show table view
-                    authContainer.style.display = "none";
-                    dataContainer.style.display = "block";
-                    document.body.style.backgroundColor = "#F8F9FA";
-                    
-                    // Load table data
-                    populateTableData();
-                    
-                    // Show success toast
-                    showToast();
-                } else {
-                    // Failed authentication
-                    securityKeyInput.classList.add("error");
-                    keyFeedback.classList.add("visible");
-                    
-                    // Reset button state
-                    verifyButton.disabled = false;
-                    authSpinner.style.display = "none";
-                    verifyButton.querySelector(".btn-text").textContent = "Verify Access";
-                    
-                    // Clear input
-                    securityKeyInput.value = "";
-                    securityKeyInput.focus();
-                }
-            }, 1500);
-        }
-        
-        // Function to populate table data
-        function populateTableData() {
-            dataTableBody.innerHTML = "";
-            
-            sampleData.forEach(item => {
-                const row = document.createElement("tr");
-                
-                // Create status badge based on status
-                let statusBadge;
-                switch(item.status) {
-                    case "active":
-                        statusBadge = `<span class="status-badge status-active"><i class="fas fa-circle"></i> Active</span>`;
-                        break;
-                    case "inactive":
-                        statusBadge = `<span class="status-badge status-inactive"><i class="fas fa-circle"></i> Inactive</span>`;
-                        break;
-                    case "pending":
-                        statusBadge = `<span class="status-badge status-pending"><i class="fas fa-circle"></i> Pending</span>`;
-                        break;
-                    default:
-                        statusBadge = item.status;
-                }
-                
-                row.innerHTML = `
-                    <td>${item.id}</td>
-                    <td>${item.name}</td>
-                    <td>${item.client}</td>
-                    <td>${item.startDate}</td>
-                    <td>${item.endDate}</td>
-                    <td>${statusBadge}</td>
-                    <td>${item.budget}</td>
-                `;
-                
-                dataTableBody.appendChild(row);
-            });
-        }
-        
-        // Function to show toast notification
-        function showToast() {
-            toast.classList.add("show");
-            
-            // Auto-hide toast after 5 seconds
-            setTimeout(() => {
-                toast.classList.remove("show");
-            }, 5000);
-        }
-        
-        // Function to handle logout
-        function handleLogout() {
-            dataContainer.style.display = "none";
-            authContainer.style.display = "flex";
-            document.body.style.backgroundColor = "#F8F9FA";
-            
-            // Reset auth state
-            securityKeyInput.value = "";
-            verifyButton.disabled = false;
-            authSpinner.style.display = "none";
-            verifyButton.querySelector(".btn-text").textContent = "Verify Access";
-        }
-        
-        // Event listeners
-        verifyButton.addEventListener("click", verifySecurityKey);
-        logoutButton.addEventListener("click", handleLogout);
-        toastClose.addEventListener("click", () => toast.classList.remove("show"));
-        
-        // Enter key to submit
-        securityKeyInput.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                verifySecurityKey();
-            }
-        });
-        
-        // Focus input on load
-        window.addEventListener("load", () => {
-            securityKeyInput.focus();
-        });
-        
+  </div>
 
-        console.log("Current valid key (for demo only):", ENV.SECURITY_KEYS[ENV.CURRENT_WEEK_KEY_INDEX]);
-    </script>
+  <!-- Data Table Screen -->
+  <div class="data-container" id="dataContainer">
+    <div class="data-header">
+      <h1 class="data-title">Historic ATS Gainers & Losers</h1>
+      <div class="data-actions">
+        <button class="data-action">
+          <i class="fas fa-download"></i>
+          Export
+        </button>
+        <button class="data-action">
+          <i class="fas fa-sync-alt"></i>
+          Refresh
+        </button>
+        <button class="data-action data-logout" id="logoutButton">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </button>
+      </div>
+    </div>
+
+
+    <!-- HISTORIC ATS GAINERS & LOSERS TABLE -->
+    <div class="container mt-5" id="atsTableContainer" style="padding: 20px; background-color: #ffffff; color: #000;">
+      <h2>Historic ATS Gainers & Losers</h2>
+
+      <ul class="nav nav-tabs gap-2 mt-4">
+        <li class="nav-item">
+          <button class="nav-link active" data-tab="largeCaps">Large Caps</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-tab="mediumCaps">Medium Caps</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-tab="smallCaps">Small Caps</button>
+        </li>
+
+        <div class="ms-auto d-flex gap-2">
+          <button id="trendUp" class="btn btn-sm" style="background-color: green; color: white;">
+            <i class="fa-solid fa-arrow-trend-up"></i>
+          </button>
+          <button id="trendDown" class="btn btn-sm" style="background-color: gray; color: white;">
+            <i class="fa-solid fa-arrow-trend-down"></i>
+          </button>
+        </div>
+      </ul>
+
+      <div class="table-responsive mt-3">
+        <table class="table table-bordered">
+          <thead class="table-primary">
+            <tr>
+              <th>TICKER</th>
+              <th>FROM</th>
+              <th>TO</th>
+              <th>IRREGULAR VOL</th>
+              <th>PERCENT CHANGE</th>
+            </tr>
+          </thead>
+          <tbody id="atsTableBody">
+            <tr>
+              <td colspan="5" class="text-center">Loading data...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <div class="toast-icon">
+      <i class="fas fa-check"></i>
+    </div>
+    <div class="toast-content">
+      <div class="toast-title">Success</div>
+      <div class="toast-message">Authentication successful. Welcome to the system.</div>
+    </div>
+    <button class="toast-close" id="toastClose">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <script>
+    const ENV = {
+      SECURITY_KEYS: [
+        "ENT-AUTH-85J2K4L7M9N3P6Q8S1",
+        "SEC-KEY-23D7F9G4H6J8K2L5N7P",
+        "ACC-TOK-56X1Z3A5C7E9G2J4L6",
+        "API-KEY-12Q4S6U8W1Y3A5C7E9",
+        "AUTH-ID-34G6H8J1K3L5N7P9R2",
+        "SYS-KEY-78B2D4F6H8J1L3N5P7"
+      ],
+      CURRENT_WEEK_KEY_INDEX: Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 1)) / (7 * 24 * 60 * 60 * 1000)) % 2
+    };
+
+
+    const authContainer = document.getElementById("authContainer");
+    const dataContainer = document.getElementById("dataContainer");
+    const securityKeyInput = document.getElementById("securityKey");
+    const keyFeedback = document.getElementById("keyFeedback");
+    const verifyButton = document.getElementById("verifyButton");
+    const logoutButton = document.getElementById("logoutButton");
+    const authSpinner = document.getElementById("authSpinner");
+    const dataTableBody = document.getElementById("dataTableBody");
+    const toast = document.getElementById("toast");
+    const toastClose = document.getElementById("toastClose");
+
+    function verifySecurityKey() {
+      const enteredKey = securityKeyInput.value.trim();
+      const validKey = ENV.SECURITY_KEYS[ENV.CURRENT_WEEK_KEY_INDEX];
+
+      verifyButton.disabled = true;
+      authSpinner.style.display = "block";
+      verifyButton.querySelector(".btn-text").textContent = "Verifying...";
+
+      setTimeout(() => {
+        if (enteredKey === validKey) {
+          securityKeyInput.classList.remove("error");
+          keyFeedback.classList.remove("visible");
+          authContainer.style.display = "none";
+          dataContainer.style.display = "block";
+          document.body.style.backgroundColor = "#F8F9FA";
+          populateTableData();
+          showToast();
+        } else {
+          securityKeyInput.classList.add("error");
+          keyFeedback.classList.add("visible");
+          verifyButton.disabled = false;
+          authSpinner.style.display = "none";
+          verifyButton.querySelector(".btn-text").textContent = "Verify Access";
+          securityKeyInput.value = "";
+          securityKeyInput.focus();
+        }
+      }, 1500);
+    }
+
+    function populateTableData() {
+      dataTableBody.innerHTML = "";
+      sampleData.forEach((item) => {
+        const row = document.createElement("tr");
+        let statusBadge;
+        switch (item.status) {
+          case "active":
+            statusBadge = `<span class="status-badge status-active"><i class="fas fa-circle"></i> Active</span>`;
+            break;
+          case "inactive":
+            statusBadge = `<span class="status-badge status-inactive"><i class="fas fa-circle"></i> Inactive</span>`;
+            break;
+          case "pending":
+            statusBadge = `<span class="status-badge status-pending"><i class="fas fa-circle"></i> Pending</span>`;
+            break;
+          default:
+            statusBadge = item.status;
+        }
+        row.innerHTML = `
+          <td>${item.id}</td>
+          <td>${item.name}</td>
+          <td>${item.client}</td>
+          <td>${item.startDate}</td>
+          <td>${item.endDate}</td>
+          <td>${statusBadge}</td>
+          <td>${item.budget}</td>`;
+        dataTableBody.appendChild(row);
+      });
+    }
+
+    function showToast() {
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 5000);
+    }
+
+    function handleLogout() {
+      dataContainer.style.display = "none";
+      authContainer.style.display = "flex";
+      document.body.style.backgroundColor = "#F8F9FA";
+      securityKeyInput.value = "";
+      verifyButton.disabled = false;
+      authSpinner.style.display = "none";
+      verifyButton.querySelector(".btn-text").textContent = "Verify Access";
+    }
+
+    verifyButton.addEventListener("click", verifySecurityKey);
+    logoutButton.addEventListener("click", handleLogout);
+    toastClose.addEventListener("click", () => toast.classList.remove("show"));
+    securityKeyInput.addEventListener("keypress", function (event) {
+      if (event.key === "Enter") verifySecurityKey();
+    });
+    window.addEventListener("load", () => {
+      securityKeyInput.focus();
+    });
+
+    // ========== ATS TABLE SCRIPT ==========
+    const API_BASE_URL = "https://valourwealthdjango-production.up.railway.app/";
+    const apiPaths = {
+      up: {
+        largeCaps: "api/large_caps/",
+        mediumCaps: "api/medium_caps/",
+        smallCaps: "api/small_caps/",
+      },
+      down: {
+        largeCaps: "api/large_caps_down/",
+        mediumCaps: "api/medium_caps_down/",
+        smallCaps: "api/small_caps_down/",
+      },
+    };
+
+    let activeTab = "largeCaps";
+    let trend = "up";
+    const atsTableBody = document.getElementById("atsTableBody");
+
+    function loadTableData() {
+      const url = API_BASE_URL + apiPaths[trend][activeTab];
+      atsTableBody.innerHTML = `<tr><td colspan="5" class="text-center">Loading data...</td></tr>`;
+
+      fetch(url)
+        .then((res) => res.json())
+        .then((data) => {
+          if (!Array.isArray(data) || data.length === 0) {
+            atsTableBody.innerHTML = `<tr><td colspan="5" class="text-center">No data available.</td></tr>`;
+            return;
+          }
+
+          atsTableBody.innerHTML = "";
+          data.forEach((item) => {
+            const from = item.from_price ? `$${item.from_price}<br><small>${item.from_time || "-"}</small>` : "-";
+            const to = item.to_price ? `$${item.to_price}<br><small>${item.to_time || "-"}</small>` : "-";
+            const change = isNaN(parseFloat(item.percent_change)) ? "NaN%" : `${parseFloat(item.percent_change).toFixed(2)}%`;
+            const color = parseFloat(item.percent_change) >= 0 ? "text-success" : "text-danger";
+            const row = `
+              <tr>
+                <td>${item.ticker || "-"}</td>
+                <td>${from}</td>
+                <td>${to}</td>
+                <td><span class="badge bg-${trend === "up" ? "success" : "danger"}">${item.irregular_vol || "x"}</span></td>
+                <td><span class="${color}">${parseFloat(item.percent_change) >= 0 ? "+" : ""}${change}</span><br><small>${item.duration || "-"}</small></td>
+              </tr>
+            `;
+            atsTableBody.innerHTML += row;
+          });
+        })
+        .catch(() => {
+          atsTableBody.innerHTML = `<tr><td colspan="5" class="text-danger text-center">Failed to load data.</td></tr>`;
+        });
+    }
+
+    document.querySelectorAll("[data-tab]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("[data-tab]").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeTab = btn.getAttribute("data-tab");
+        loadTableData();
+      });
+    });
+
+    document.getElementById("trendUp").addEventListener("click", () => {
+      trend = "up";
+      document.getElementById("trendUp").style.backgroundColor = "green";
+      document.getElementById("trendDown").style.backgroundColor = "gray";
+      loadTableData();
+    });
+
+    document.getElementById("trendDown").addEventListener("click", () => {
+      trend = "down";
+      document.getElementById("trendDown").style.backgroundColor = "red";
+      document.getElementById("trendUp").style.backgroundColor = "gray";
+      loadTableData();
+    });
+
+    loadTableData();
+  </script>
 </body>
 </html>
